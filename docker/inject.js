@@ -13,6 +13,7 @@ const REPLACEMENTS = {
   __VITE_MEDIA_URL__: process.env.VITE_MEDIA_URL || "",
   __VITE_PROXY_URL__: process.env.VITE_PROXY_URL || "",
   __VITE_HCAPTCHA_SITEKEY__: process.env.VITE_HCAPTCHA_SITEKEY || "",
+  __VITE_GIFBOX_URL__: process.env.VITE_GIFBOX_URL || "",
 };
 
 // Also support REVOLT_PUBLIC_URL as an alias for VITE_API_URL (Helm chart compat)
