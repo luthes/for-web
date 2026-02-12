@@ -18,7 +18,6 @@ COPY packages/stoat.js/package.json packages/stoat.js/
 COPY packages/solid-livekit-components/package.json packages/solid-livekit-components/
 COPY packages/js-lingui-solid/packages/babel-plugin-lingui-macro/package.json packages/js-lingui-solid/packages/babel-plugin-lingui-macro/
 COPY packages/js-lingui-solid/packages/babel-plugin-extract-messages/package.json packages/js-lingui-solid/packages/babel-plugin-extract-messages/
-COPY packages/solid-dnd-directive/package.json packages/solid-dnd-directive/
 COPY packages/client/package.json packages/client/
 
 # Install all workspace dependencies
