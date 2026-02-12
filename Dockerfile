@@ -20,6 +20,9 @@ COPY packages/js-lingui-solid/packages/babel-plugin-lingui-macro/package.json pa
 COPY packages/js-lingui-solid/packages/babel-plugin-extract-messages/package.json packages/js-lingui-solid/packages/babel-plugin-extract-messages/
 COPY packages/client/package.json packages/client/
 
+# Copy panda config needed by client's "prepare" lifecycle script (panda codegen)
+COPY packages/client/panda.config.ts packages/client/
+
 # Install all workspace dependencies
 RUN pnpm install --frozen-lockfile
 
