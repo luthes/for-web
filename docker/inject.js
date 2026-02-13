@@ -1,5 +1,5 @@
-const { copySync, removeSync, readFileSync, writeFileSync } = require("fs-extra");
-const klaw = require("klaw");
+const { cpSync, rmSync, readFileSync, writeFileSync, readdirSync } = require("node:fs");
+const { join } = require("node:path");
 
 const BUILD_DIR = "dist";
 const OUT_DIR = "dist_injected";
@@ -15,35 +15,32 @@ const REPLACEMENTS = {
   __VITE_HCAPTCHA_SITEKEY__: process.env.VITE_HCAPTCHA_SITEKEY || "",
 };
 
-(async () => {
-  console.log("Preparing injected build...");
+console.log("Preparing injected build...");
 
-  try {
-    removeSync(OUT_DIR);
-  } catch (_) {}
+rmSync(OUT_DIR, { recursive: true, force: true });
+cpSync(BUILD_DIR, OUT_DIR, { recursive: true });
 
-  copySync(BUILD_DIR, OUT_DIR);
+console.log("Injecting environment variables...");
+const files = readdirSync(OUT_DIR, { recursive: true });
 
-  console.log("Injecting environment variables...");
-  for await (const file of klaw(OUT_DIR)) {
-    const path = file.path;
-    if (path.endsWith(".js") || path.endsWith(".html")) {
-      let data = readFileSync(path, "utf-8");
-      let modified = false;
+for (const file of files) {
+  const path = join(OUT_DIR, file);
+  if (!path.endsWith(".js") && !path.endsWith(".html")) continue;
 
-      for (const [placeholder, value] of Object.entries(REPLACEMENTS)) {
-        if (data.includes(placeholder)) {
-          data = data.replaceAll(placeholder, value);
-          modified = true;
-        }
-      }
+  let data = readFileSync(path, "utf-8");
+  let modified = false;
 
-      if (modified) {
-        console.log("Injected:", path);
-        writeFileSync(path, data);
-      }
+  for (const [placeholder, value] of Object.entries(REPLACEMENTS)) {
+    if (data.includes(placeholder)) {
+      data = data.replaceAll(placeholder, value);
+      modified = true;
     }
   }
 
-  console.log("Injection complete.");
-})();
+  if (modified) {
+    console.log("Injected:", path);
+    writeFileSync(path, data);
+  }
+}
+
+console.log("Injection complete.");
